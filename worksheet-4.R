@@ -42,8 +42,10 @@ cbp <- fread('data/cbp15co.csv')
 
 cbp <- fread(
   'data/cbp15co.csv',
-  ...,
-  ...)
+  colClasses = c(
+    FIPSTATE = 'character',
+     FIPSCTY = 'character'
+     ))
 
 acs <- fread(
   'data/ACS/sector_ACS_15_5YR_S2413.csv',
@@ -51,12 +53,12 @@ acs <- fread(
 
 ## dplyr Functions 
 
-library(...)
-cbp2 <- filter(...,
-  ...,
+library(dplyr)
+cbp2 <- filter(cbp,
+  grepl('----', NAICS),
   !grepl('------', NAICS))
 
-library(...)
+library(stringr)
 cbp2 <- filter(cbp,
   ...)
 
