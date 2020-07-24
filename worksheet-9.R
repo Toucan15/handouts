@@ -9,12 +9,12 @@ file.copy('data/portal.sqlite', 'myportal.sqlite')
 library(RSQLite)
 
 # Create a connection object
-con <- ...(RSQLite::SQLite(), "myportal.sqlite")
+con <- dbConnect(RSQLite::SQLite(), "myportal.sqlite")
 
 # Read a table
 library(dplyr)
 
-species <- ...(con, 'species')
+species <- tbl(con, 'species')
 
 # Upload a new table
 df <- data.frame(
@@ -22,7 +22,7 @@ df <- data.frame(
   name = c('Alice', 'Bob')
 )
 
-...(con, 'observers', df)
+dbWriteTable(con, 'observers', df)
 
 # remove existing observers table
 dbRemoveTable(con, 'observers') 
