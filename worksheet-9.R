@@ -11,10 +11,17 @@ library(RSQLite)
 # Create a connection object
 con <- dbConnect(RSQLite::SQLite(), "myportal.sqlite")
 
+#to view contents
+dbListTables(con)
+dbListFields(con, 'species')
+
 # Read a table
+#dbReadTable() or
 library(dplyr)
 
 species <- tbl(con, 'species')
+
+## type species in console to view table
 
 # Upload a new table
 df <- data.frame(
@@ -29,8 +36,8 @@ dbRemoveTable(con, 'observers')
 
 # Recreate observers table
 
-...(con, 'observers', list(
-  id = '...',
+dbCreateTable(con, 'observers', list(
+  id = 'integer primary key',
   name = 'text'
 ))
 
@@ -41,25 +48,28 @@ df <- data.frame(
   name = c('Alice', 'Bob')
 )
 
-...(con, 'observers', df, append = TRUE)
+dbWriteTable(con, 'observers', df, append = TRUE)
+##enter dbReadTable(con, 'observers') to view
 
 # Try adding a new observer with existing id
+##should work because id = 1 already used (for Alice) see dbReadTable result
 df <- data.frame(
   id = c(1),
   name = c('J. Doe')
 )
 
-...(con, 'observers', df,
+dbWriteTable(con, 'observers', df,
              append = TRUE)
 
 # Try violating foreign key constraint
+##this will fail because plot_id = Rodent is not found in table
 dbExecute(con, 'PRAGMA foreign_keys = ON;')
 
 df <- data.frame(
   month = 7,
   day = 16,
   year = 1977,
-  plot_id = '...'
+  plot_id = 'Rodent'
 )
 
 dbWriteTable(con, 'surveys', df,
