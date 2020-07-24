@@ -77,7 +77,14 @@ dbWriteTable(con, 'surveys', df,
 
 # Queries
 # basic queries
-...(con, "... year ... surveys")
+
+## run the query
+dbGetQuery(con, "SELECT year FROM surveys")
+##caps for funciton and lower case for variables by convention
+##SQL not case sensitive
+
+##Save query to object
+year <- dbGetQuery(con, "SELECT year FROM surveys")
 
 dbGetQuery(con, "SELECT ... FROM ...")
 
@@ -114,7 +121,7 @@ FROM surveys")
 # include a character string within another
 dbGetQuery(con, "SELECT *
 FROM surveys
-... species_id ...")
+WHERE species_id = 'DM'")
 
 dbGetQuery(con, "SELECT *
 FROM surveys
@@ -130,17 +137,18 @@ WHERE ...
   ... species_id = 'DM'")
 
 # Joins
-# one to many 
+# one to many, join tables based on plot_id
 dbGetQuery(con, "SELECT weight, plot_type
 FROM surveys
-...
-  ... = ...")
+JOIN plots
+  ON surveys.plot_id = plots.plot_id")
 
 # many to many
-dbGetQuery(con, "SELECT weight, genus, plot_type
+out2 <- dbGetQuery(con, "SELECT weight, genus, plot_type
 FROM surveys
-... plots
-  ON ...
-... species
-  ON ...")
+JOIN plots
+  ON surveys.plot_id = plots.plot_id
+JOIN species
+  ON surveys.species_id = species.species_id")
 
+head(out2)
